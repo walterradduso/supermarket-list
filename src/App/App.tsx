@@ -66,7 +66,7 @@ const App: React.FC = () => {
   }
 
   useEffect(() => {
-    setTimeout(() => {
+    const itemsTimeout = setTimeout(() => {
       itemsService
         .list()
         .then((items) => {
@@ -78,6 +78,10 @@ const App: React.FC = () => {
           setGetError(error);
         });
     }, 1000);
+
+    return () => {
+      clearTimeout(itemsTimeout);
+    };
   }, []);
 
   if (status === Status.Init) {

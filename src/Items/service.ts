@@ -3,24 +3,32 @@ import {Item} from "./types";
 
 export default {
   add: async (text: Item["text"]): Promise<Item> => {
-    const newItem: Item = {id: +new Date(), text};
+    try {
+      const newItem: Item = {id: +new Date(), text};
 
-    await addLocalItem(newItem);
+      await addLocalItem(newItem);
 
-    return Promise.resolve(newItem);
+      return Promise.resolve(newItem);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   },
   list: async (): Promise<Item[]> => {
     try {
       const myItems: Item[] = await getLocalItems();
 
       return Promise.resolve(myItems);
-    } catch (e) {
-      return Promise.reject("There was a problem getting your items. Please refresh your page.");
+    } catch (error) {
+      return Promise.reject(error);
     }
   },
   remove: async (id: Item["id"]): Promise<Item["id"]> => {
-    await removeLocalItems(id);
+    try {
+      await removeLocalItems(id);
 
-    return Promise.resolve(id);
+      return Promise.resolve(id);
+    } catch (error) {
+      return Promise.reject(error);
+    }
   },
 };
