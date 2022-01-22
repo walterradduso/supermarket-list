@@ -6,7 +6,6 @@
   border-radius: 4px;
   transition: background-color 0.25s linear;
   padding: 12px 36px;
-  width: 100%;
 
   &.primary {
     background-color: dodgerblue;
@@ -24,5 +23,9 @@
     &:hover {
       background-color: gainsboro;
     }
+  }
+
+  &.fullWidth {
+    width: 100%;
   }
 }

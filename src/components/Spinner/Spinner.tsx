@@ -6,13 +6,17 @@ import styles from "./Spinner.module.scss";
 
 interface Props {
   label?: string;
+  colorScheme?: "primary" | "secondary";
 }
 
-const Spinner: React.FC<Props> = ({label}) => {
+const Spinner: React.FC<Props> = ({colorScheme = "secondary", label}) => {
   return (
-    <div className={styles.spinner}>
-      <img alt="Spinner" src={spinner} />
-      <span>{label}</span>
+    <div className={styles.container}>
+      <div className={styles.spinnerContainer}>
+        <span className={`${styles.spinner} ${styles[colorScheme]}`} />
+      </div>
+
+      {label && <span>{label}</span>}
     </div>
   );
 };

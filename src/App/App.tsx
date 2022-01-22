@@ -23,11 +23,18 @@ const App: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [status, setStatus] = useState<Status>(Status.Init);
   const [isModalVisible, toggleModal] = useState<boolean>(false);
+  const [loadingItem, setLoadingItem] = useState<boolean>(false);
+  const [deletingItem, setDeletingItem] = useState<number | null>(null);
 
   async function remove(id: Item["id"]) {
-    const itemRemoved = await itemsService.remove(id);
+    setDeletingItem(id);
 
-    setItems((items) => items.filter((item) => item.id !== itemRemoved));
+    setTimeout(async () => {
+      const itemRemoved = await itemsService.remove(id);
+
+      setItems((items) => items.filter((item) => item.id !== itemRemoved));
+      setDeletingItem(null);
+    }, 1000);
   }
 
   async function add(event: React.FormEvent<Form>) {
@@ -45,10 +52,15 @@ const App: React.FC = () => {
       return;
     }
 
-    const newItem = await itemsService.add(text);
+    setLoadingItem(true);
 
-    setItems((items) => items.concat(newItem));
-    toggleModal(false);
+    setTimeout(async () => {
+      const newItem = await itemsService.add(text);
+
+      setItems((items) => items.concat(newItem));
+      toggleModal(false);
+      setLoadingItem(false);
+    }, 1000);
   }
 
   useEffect(() => {
@@ -73,28 +85,43 @@ const App: React.FC = () => {
 
       <List>
         {items.map((item) => (
-          <ListItem key={item.id} onRemove={() => remove(item.id)}>
+          <ListItem
+            key={item.id}
+            deletingItem={deletingItem === item.id}
+            onRemove={() => remove(item.id)}
+          >
             {item.text}
           </ListItem>
         ))}
       </List>
 
-      <Button colorScheme="primary" focusButton={!isModalVisible} onClick={() => toggleModal(true)}>
+      <Button
+        fullWidth
+        colorScheme="primary"
+        focusButton={!isModalVisible}
+        onClick={() => toggleModal(true)}
+      >
         Add Item
       </Button>
 
       {isModalVisible && (
         <Modal onClose={() => toggleModal(false)}>
           <form onSubmit={add}>
-            <h2>Add item</h2>
-            <TextField name="text" />
+            <h3>Add item</h3>
+
+            <TextField autoComplete="off" name="text" />
+
             <ModalFooter>
               <Button type="button" onClick={() => toggleModal(false)}>
                 Cancel
               </Button>
 
-              <Button colorScheme="primary" type="submit">
-                Add
+              <Button
+                colorScheme={loadingItem ? "secondary" : "primary"}
+                disabled={loadingItem}
+                type="submit"
+              >
+                {loadingItem ? <Spinner /> : "Add"}
               </Button>
             </ModalFooter>
           </form>
