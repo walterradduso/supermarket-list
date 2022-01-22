@@ -39,6 +39,12 @@ const App: React.FC = () => {
       return;
     }
 
+    const existItem = items.some((item) => item.text === text);
+
+    if (existItem) {
+      return;
+    }
+
     const newItem = await itemsService.add(text);
 
     setItems((items) => items.concat(newItem));
@@ -73,7 +79,7 @@ const App: React.FC = () => {
         ))}
       </List>
 
-      <Button autoFocus colorScheme="primary" onClick={() => toggleModal(true)}>
+      <Button colorScheme="primary" focusButton={!isModalVisible} onClick={() => toggleModal(true)}>
         Add Item
       </Button>
 

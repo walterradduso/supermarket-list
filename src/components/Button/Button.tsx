@@ -1,14 +1,28 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 
 import styles from "./Button.module.scss";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   colorScheme?: "primary" | "secondary";
+  focusButton?: boolean;
 }
 
-const Button: React.FC<Props> = ({children, colorScheme = "secondary", ...props}) => {
+const Button: React.FC<Props> = ({
+  children,
+  colorScheme = "secondary",
+  focusButton = false,
+  ...props
+}) => {
+  const addItemButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (addItemButton.current && focusButton) {
+      addItemButton.current.focus();
+    }
+  }, [focusButton]);
+
   return (
-    <button className={`${styles.container} ${styles[colorScheme]}`} {...props}>
+    <button ref={addItemButton} className={`${styles.container} ${styles[colorScheme]}`} {...props}>
       {children}
     </button>
   );

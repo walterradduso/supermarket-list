@@ -5,7 +5,7 @@ import spinner from "../../assets/spinner.gif";
 import styles from "./Spinner.module.scss";
 
 interface Props {
-  label: string;
+  label?: string;
 }
 
 const Spinner: React.FC<Props> = ({label}) => {
