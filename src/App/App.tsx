@@ -11,6 +11,7 @@ import List, {ListItem} from "../components/List";
 import styles from "./App.module.scss";
 
 enum Status {
+  Error = "Error",
   Init = "Init",
   Success = "Success",
 }
@@ -22,6 +23,7 @@ interface Form extends HTMLFormElement {
 const App: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [status, setStatus] = useState<Status>(Status.Init);
+  const [getError, setGetError] = useState<string | null>(null);
   const [isModalVisible, toggleModal] = useState<boolean>(false);
   const [loadingItem, setLoadingItem] = useState<boolean>(false);
   const [deletingItem, setDeletingItem] = useState<number | null>(null);
@@ -64,16 +66,30 @@ const App: React.FC = () => {
   }
 
   useEffect(() => {
-    itemsService.list().then((items) => {
-      setTimeout(() => {
-        setItems(items);
-        setStatus(Status.Success);
-      }, 1000);
-    });
+    setTimeout(() => {
+      itemsService
+        .list()
+        .then((items) => {
+          setItems(items);
+          setStatus(Status.Success);
+        })
+        .catch((error) => {
+          setStatus(Status.Error);
+          setGetError(error);
+        });
+    }, 1000);
   }, []);
 
   if (status === Status.Init) {
     return <Spinner label="Loading supermarket list..." />;
+  }
+
+  if (status === Status.Error) {
+    return (
+      <div>
+        <p>{getError}</p>
+      </div>
+    );
   }
 
   return (
@@ -83,7 +99,7 @@ const App: React.FC = () => {
         <h3>{items.length} item(s)</h3>
       </header>
 
-      <List>
+      <List items={items}>
         {items.map((item) => (
           <ListItem
             key={item.id}
