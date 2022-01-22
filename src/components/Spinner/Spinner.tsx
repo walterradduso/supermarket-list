@@ -1,7 +1,5 @@
 import React from "react";
 
-import spinner from "../../assets/spinner.gif";
-
 import styles from "./Spinner.module.scss";
 
 interface Props {
