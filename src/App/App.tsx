@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 
-import {Item} from "../Items/types";
-import itemsService from "../Items/service";
+import {Item} from "../items/types";
+import itemsService from "../items/service";
 import Spinner from "../components/Spinner";
 import Button from "../components/Button";
 import Modal, {ModalFooter} from "../components/Modal";
@@ -28,18 +28,26 @@ const App: React.FC = () => {
   const [loadingItem, setLoadingItem] = useState<boolean>(false);
   const [deletingItem, setDeletingItem] = useState<number | null>(null);
 
-  async function remove(id: Item["id"]) {
+  function remove(id: Item["id"]) {
     setDeletingItem(id);
 
-    setTimeout(async () => {
-      const itemRemoved = await itemsService.remove(id);
-
-      setItems((items) => items.filter((item) => item.id !== itemRemoved));
-      setDeletingItem(null);
+    setTimeout(() => {
+      itemsService
+        .remove(id)
+        .then((itemRemoved) => {
+          setItems((items) => items.filter((item) => item.id !== itemRemoved));
+        })
+        .catch((error) => {
+          setStatus(Status.Error);
+          setGetError(error);
+        })
+        .finally(() => {
+          setDeletingItem(null);
+        });
     }, 1000);
   }
 
-  async function add(event: React.FormEvent<Form>) {
+  function add(event: React.FormEvent<Form>) {
     event.preventDefault();
 
     const text = event.currentTarget.text.value.trim();
@@ -56,12 +64,20 @@ const App: React.FC = () => {
 
     setLoadingItem(true);
 
-    setTimeout(async () => {
-      const newItem = await itemsService.add(text);
-
-      setItems((items) => items.concat(newItem));
-      toggleModal(false);
-      setLoadingItem(false);
+    setTimeout(() => {
+      itemsService
+        .add(text)
+        .then((newItem) => {
+          setItems((items) => items.concat(newItem));
+          toggleModal(false);
+        })
+        .catch((error) => {
+          setStatus(Status.Error);
+          setGetError(error);
+        })
+        .finally(() => {
+          setLoadingItem(false);
+        });
     }, 1000);
   }
 
@@ -85,7 +101,7 @@ const App: React.FC = () => {
   }, []);
 
   if (status === Status.Init) {
-    return <Spinner label="Loading supermarket list..." />;
+    return <Spinner label="Loading supermarket list items..." />;
   }
 
   if (status === Status.Error) {
@@ -103,12 +119,14 @@ const App: React.FC = () => {
         <h3>{items.length} item(s)</h3>
       </header>
 
-      <List items={items}>
+      <List itemsLength={items.length}>
         {items.map((item) => (
           <ListItem
             key={item.id}
             deletingItem={deletingItem === item.id}
-            onRemove={() => remove(item.id)}
+            onRemove={() => {
+              if (!deletingItem) remove(item.id);
+            }}
           >
             {item.text}
           </ListItem>

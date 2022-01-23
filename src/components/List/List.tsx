@@ -1,14 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 
-import {Item} from "../../Items/types";
-
 import styles from "./List.module.scss";
 
 interface Props {
-  items: Item[];
+  itemsLength: number;
 }
 
-const List: React.FC<Props> = ({children, items}) => {
+const List: React.FC<Props> = ({children, itemsLength}) => {
   const listRef = useRef<HTMLUListElement>(null);
   const [scrollableList, setScrollableList] = useState<boolean>(false);
 
@@ -22,7 +20,7 @@ const List: React.FC<Props> = ({children, items}) => {
         setScrollableList(false);
       }
     }
-  }, [items]);
+  }, [itemsLength]);
 
   return (
     <ul
