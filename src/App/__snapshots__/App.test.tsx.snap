@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`render snapshot 1`] = `
+exports[`App Tests render snapshot 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
@@ -16,7 +16,7 @@ Object {
           />
         </div>
         <span>
-          Loading supermarket list...
+          Loading supermarket list items...
         </span>
       </div>
     </div>
@@ -33,7 +33,7 @@ Object {
         />
       </div>
       <span>
-        Loading supermarket list...
+        Loading supermarket list items...
       </span>
     </div>
   </div>,
