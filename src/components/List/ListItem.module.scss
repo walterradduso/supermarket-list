@@ -1,0 +1,37 @@
+.container {
+  align-items: center;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 0 3px rgba(black, 0.15);
+  display: flex;
+  list-style: none;
+  padding: 12px;
+
+  &:not(:first-of-type) {
+    margin-top: 12px;
+  }
+
+  button {
+    align-items: center;
+    background-color: whitesmoke;
+    border-radius: 4px;
+    border: none;
+    color: red;
+    cursor: pointer;
+    display: flex;
+    font-size: 16px;
+    height: 35px;
+    justify-content: center;
+    margin-left: auto;
+    width: 35px;
+
+    img {
+      width: 25px;
+    }
+
+    &:hover {
+      background-color: gainsboro;
+      text-decoration: underline;
+    }
+  }
+}
