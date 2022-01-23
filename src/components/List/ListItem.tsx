@@ -16,7 +16,7 @@ const ListItem: React.FC<Props> = ({children, deletingItem = false, onRemove}) =
       <span>{children}</span>
 
       <button onClick={onRemove}>
-        {deletingItem ? <Spinner /> : <img alt="Delete item" src={deleteIcon} />}
+        {deletingItem ? <Spinner /> : <img alt="Delete item image" src={deleteIcon} />}
       </button>
     </li>
   );
