@@ -8,8 +8,12 @@ interface Props {
 
 const Modal: React.FC<Props> = ({children, onClose}) => {
   return (
-    <section className={styles.container} onKeyDown={(e) => e.key === "Escape" && onClose()}>
-      <b onClick={onClose} />
+    <section
+      className={styles.container}
+      data-testid="modal"
+      onKeyDown={(e) => e.key === "Escape" && onClose()}
+    >
+      <b data-testid="outside-modal" onClick={onClose} />
       <article>{children}</article>
     </section>
   );
